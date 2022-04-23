@@ -7,7 +7,5 @@ import java.util.stream.Stream;
  * Sequential file reader
  */
 public interface FileReader {
-
     Stream<String> readLines(File file);
-
 }

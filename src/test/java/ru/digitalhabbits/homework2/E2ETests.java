@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Map;
 
 import ru.digitalhabbits.homework2.impl.AsyncFileLetterCounter;
+import ru.digitalhabbits.homework2.impl.FileLetterCounterImpl;
 
 public class E2ETests {
 
@@ -28,6 +29,18 @@ public class E2ETests {
                 entry('e', 2731L),
                 entry('f', 2629L)
         );
+    }
+
+    @Test
+    void async_letter_count_equals_to_fileLetterCounter_result() {
+        var file = getFile("test.txt");
+        var counter = new AsyncFileLetterCounter();
+        var fileCounter = new FileLetterCounterImpl();
+
+        Map<Character, Long> count = counter.count(file);
+        Map<Character, Long> countFromFileCounterClass = fileCounter.count(file);
+
+        assertThat(count == countFromFileCounterClass);
     }
 
     private File getFile(String name) {
