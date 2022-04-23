@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,14 +25,12 @@ public class AsyncFileLetterCounter implements FileLetterCounter {
     public Map<Character, Long> count(File input) {
         FileReaderImpl fileReader = new FileReaderImpl();
         Stream<String> streamLines = fileReader.readLines(input);
-        LetterCountMergerImpl merger = new LetterCountMergerImpl();
-        LetterCounterImpl letterCounter = new LetterCounterImpl();
 
         strings = streamLines.collect(Collectors.toList());
 
 //        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
 //        for (int i = 0; i < strings.size(); i++) {
-//            executorService.execute(new ThreadPoolImpl(letterCounter, merger));
+//            executorService.execute(new ThreadPoolImpl(counter, merger));
 //        }
 //        executorService.shutdown();
 //
