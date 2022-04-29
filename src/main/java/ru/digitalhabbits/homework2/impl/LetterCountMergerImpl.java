@@ -8,7 +8,7 @@ import java.util.Map;
 // по итогу смержить со всех потоков информацию
 public class LetterCountMergerImpl implements LetterCountMerger {
     @Override
-    public synchronized Map<Character, Long> merge(Map<Character, Long> first, Map<Character, Long> second) {
+    public Map<Character, Long> merge(Map<Character, Long> first, Map<Character, Long> second) {
         Map<Character, Long> resultMap = new HashMap<>(first);
 
         for (Map.Entry<Character, Long> entry : second.entrySet()) {
