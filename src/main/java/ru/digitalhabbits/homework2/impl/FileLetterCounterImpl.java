@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// для тестов видимо нужен
 public class FileLetterCounterImpl implements FileLetterCounter {
     @Override
     public Map<Character, Long> count(File input) {

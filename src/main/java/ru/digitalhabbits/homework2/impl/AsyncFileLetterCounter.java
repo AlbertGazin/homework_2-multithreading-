@@ -7,23 +7,37 @@ import ru.digitalhabbits.homework2.LetterCounter;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class AsyncFileLetterCounter implements FileLetterCounter {
-    public static Map<Character, Long> resultMap = new ConcurrentHashMap<>();
-    private final LetterCountMerger merger = new LetterCountMergerImpl();
-    private final LetterCounter counter = new LetterCounterImpl();
+    private Map<Character, Long> resultMap;
+    private final LetterCountMerger merger;
+    private final LetterCounter counter;
     private static final int THREAD_COUNT = Runtime.getRuntime().availableProcessors();
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+
+    public AsyncFileLetterCounter() {
+        this.resultMap = new ConcurrentHashMap<>();
+        this.merger = new LetterCountMergerImpl();
+        this.counter = new LetterCounterImpl();
+    }
+
+    public AsyncFileLetterCounter(Map<Character, Long> resultMap, LetterCountMerger merger, LetterCounter counter) {
+        this.resultMap = resultMap;
+        this.merger = merger;
+        this.counter = counter;
+    }
 
     @Override
     public Map<Character, Long> count(File input) {
         FileReader fileReader = new FileReaderImpl();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-        fileReader.readLines(input).forEach(line -> executorService.execute(new TaskForThreadPool(line, counter, merger)));
+        // Варинат №1 через Runnable
+//        fileReader.readLines(input).forEach(line -> executorService.execute(new TaskForThreadPool(line, counter, merger)));
+
+        // Варинат №2 через Callable
+        fileReader.readLines(input).map(line -> executorService.submit(new CallableTaskForThreadPool(line, counter)))
+                .forEach(mapFuture -> executorService.submit(() -> merger.merge(resultMap, mapFuture.get())));
         executorService.shutdown();
 
         try {

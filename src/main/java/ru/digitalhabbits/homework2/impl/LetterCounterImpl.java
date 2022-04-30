@@ -5,7 +5,6 @@ import ru.digitalhabbits.homework2.LetterCounter;
 import java.util.HashMap;
 import java.util.Map;
 
-// получает строку и подсчитывает количество
 public class LetterCounterImpl implements LetterCounter {
     @Override
     public Map<Character, Long> count(String input) {
