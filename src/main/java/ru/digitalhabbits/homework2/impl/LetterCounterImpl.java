@@ -16,14 +16,7 @@ public class LetterCounterImpl implements LetterCounter {
         Map<Character, Long> resultMap = new HashMap<>();
 
         for (int i = 0; i < chars.length; i++) {
-            long count = resultMap.getOrDefault(chars[i], 0L);
-
-            if (count > 0) {
-                count++;
-                resultMap.put(chars[i], count);
-            } else {
-                resultMap.put(chars[i], 1L);
-            }
+            resultMap.merge(chars[i], 1L, Long::sum);
         }
         return resultMap;
     }

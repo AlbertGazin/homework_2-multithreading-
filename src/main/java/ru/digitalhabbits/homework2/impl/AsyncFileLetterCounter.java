@@ -32,10 +32,6 @@ public class AsyncFileLetterCounter implements FileLetterCounter {
     public Map<Character, Long> count(File input) {
         FileReader fileReader = new FileReaderImpl();
 
-        // Варинат №1 через Runnable
-//        fileReader.readLines(input).forEach(line -> executorService.execute(new TaskForThreadPool(line, counter, merger)));
-
-        // Варинат №2 через Callable
         fileReader.readLines(input).map(line -> executorService.submit(new CallableTaskForThreadPool(line, counter)))
                 .forEach(mapFuture -> executorService.submit(() -> merger.merge(resultMap, mapFuture.get())));
         executorService.shutdown();

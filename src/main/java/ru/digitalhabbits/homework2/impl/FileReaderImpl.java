@@ -14,12 +14,12 @@ public class FileReaderImpl implements FileReader {
     @Override
     public Stream<String> readLines(File file) {
         Path path = Paths.get(file.getPath());
-        List<String> allLines;
+        Stream<String> allLines;
         try {
-            allLines = Files.readAllLines(path);
+            allLines = Files.lines(path);
         } catch (IOException e) {
             return Stream.empty();
         }
-        return allLines.stream();
+        return allLines;
     }
 }
